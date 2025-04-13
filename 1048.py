@@ -16,7 +16,7 @@ elif sal <=2000:
     print (f"Reajuste ganho: {sal*7/100:.2f}")
     print ("Em percentual: 7%")
 else:
-    print (f"Novo salario: {sal+sal4/100:.2f}")
+    print (f"Novo salario: {sal+sal*4/100:.2f}")
     print (f"Reajuste ganho: {sal*4/100:.2f}")
     print ("Em percentual: 4%")
 
