@@ -1,6 +1,5 @@
 import tkinter as tk
 import datetime
-import time
 import os
 from tkinter import Label, Frame, Button
 
@@ -12,36 +11,70 @@ def tocar_som():
 def alarme():
     horarioalarme = f"{hora.get()}:{minuto.get()}:{segundo.get()}"
     horarioatual = datetime.datetime.now().strftime('%H:%M:%S')
-    horario ['text'] = f"Horaio Atual: {horarioatual}\nAlarme definido: {horarioalarme}" 
-        
+    horario['text'] = f"Horário Atual: {horarioatual}\nAlarme definido: {horarioalarme}"
     if horarioalarme == horarioatual:
         tocar_som()
     else:
         janela.after(1000, alarme)
 
 janela = tk.Tk()
-janela.geometry("400x250")
-janela.title ("Alarme de Relogio")
-Label (janela, text="Alarme de Relogio em Python", font="Helvetica 20 bold").pack(pady=10)
-Label (janela, text="Definir Alarme").pack(pady=5)
+janela.geometry("420x320")
+janela.title("Alarme de Relógio")
+janela.configure(bg="#f0f4f7")
 
-Frame = tk.Frame(janela)
-Frame.pack()
+Label(
+    janela,
+    text="Alarme de Relógio em Python",
+    font="Helvetica 20 bold",
+    bg="#f0f4f7",
+    fg="#2d415a"
+).pack(pady=15)
 
-def options (value):
+Label(
+    janela,
+    text="Defina o horário do alarme:",
+    font="Helvetica 12",
+    bg="#f0f4f7",
+    fg="#2d415a"
+).pack(pady=5)
+
+frame = Frame(janela, bg="#f0f4f7")
+frame.pack(pady=10)
+
+def options(value, label):
+    container = tk.Frame(frame, bg="#f0f4f7")
+    container.pack(side=tk.LEFT, padx=5)
+    tk.Label(container, text=label, font="Helvetica 11", bg="#f0f4f7", fg="#2d415a").pack()
     opt = tk.StringVar(janela)
     opcoes = [str(i).zfill(2) for i in range(value)]
-    opt.set (opcoes[0])
-    tk.OptionMenu (Frame, opt, *opcoes).pack(side=tk.LEFT)
+    opt.set(opcoes[0])
+    tk.OptionMenu(container, opt, *opcoes).pack()
     return opt
 
-hora = options(24)
-minuto = options(60)
-segundo = options(60)
+hora = options(24, "Hora")
+minuto = options(60, "Minuto")
+segundo = options(60, "Segundo")
 
-Button (janela, text="Definir alarme", font=("Helvetica 10"), command=alarme).pack(pady=20)
+Button(
+    janela,
+    text="Definir Alarme",
+    font="Helvetica 12 bold",
+    bg="#2d415a",
+    fg="white",
+    activebackground="#3e5c76",
+    activeforeground="white",
+    relief=tk.RAISED,
+    bd=3,
+    command=alarme
+).pack(pady=25)
 
-horario = Label (janela, font="Helvetica 10", text="Horário atual: --:--:--\nAlarme definido: --:--:--")
+horario = Label(
+    janela,
+    font="Helvetica 13",
+    text="Horário atual: --:--:--\nAlarme definido: --:--:--",
+    bg="#f0f4f7",
+    fg="#2d415a"
+)
 horario.pack(pady=10)
 
 tk.mainloop()
