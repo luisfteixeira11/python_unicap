@@ -15,7 +15,6 @@ lugar = -1
 verde = False
 amarelo = False
 vermelho = False
-errado = False
 fimdoprograma = False
 atualizado = False
  
@@ -91,9 +90,8 @@ def largada(x): ##acende uma luz, assim, dando o necessário para o jogador acio
         GPIO.output(27, GPIO.HIGH)  # amarelo
         amarelo = True
  
-def cronometro_reacaovdd():
-    global errado, lugar
-    errado = False
+def cronometro_reacao():
+    global lugar
     agora = time.time()
 
     while True:
@@ -107,33 +105,37 @@ def cronometro_reacaovdd():
             if verde and dist <= 20:
                 tempo_e_dist(tempo_decorrido, dist)
                 lugar = atualizar_top5(tempo_decorrido)
-                return False, lugar
+                return lugar
             elif amarelo and 20 < dist <= 40:
                 tempo_e_dist(tempo_decorrido, dist)
                 lugar = atualizar_top5(tempo_decorrido)
-                return False, lugar
+                return lugar
             elif vermelho and 40 < dist <= 60:
                 tempo_e_dist(tempo_decorrido, dist)
                 lugar = atualizar_top5(tempo_decorrido)
-                return False, lugar
+                return lugar
             # errou a cor ou a distância
             else:
                 print("Tuderrado")
                 print("")
+                time.sleep(1)
                 tempo_e_dist(tempo_decorrido, dist)
-                return True, -1
+                return -1
         if tempo_decorrido > 10:
             print("esquecesse foi?kkkkkkkkkkkkkkkkkkkkk")
             print("")
             GPIO.output(17, GPIO.LOW)
             GPIO.output(27, GPIO.LOW)
             GPIO.output(22, GPIO.LOW)
-            return True, -1
+            return -1
         time.sleep(0.01)
  
 def tempo_e_dist(tempo_decorrido, dist): ##printa no terminal o tempo e a distancia
+    global verde, amarelo, vermelho
     tempo = tempo_decorrido*1000
     print(f"Tempo de Reação: {tempo:.2f} milissegundos")
+    print("")
+    print(f"Verde: {verde}, Amarelo: {amarelo}, Vermelho: {vermelho}, Distância: {dist}")
     print("")
     print(f"Distância: {dist:.2f} cm")
     print("")
@@ -141,7 +143,7 @@ def tempo_e_dist(tempo_decorrido, dist): ##printa no terminal o tempo e a distan
 def atualizar_top5(tempo):
     global top_tempos, top_nomes, atualizado
  
-    # Se for pior que todos, não entra no ranking
+    # se for o pior, não entra no ranking
     if tempo > top_tempos[4] and top_tempos[4] != 0:
         return -1
  
@@ -152,7 +154,7 @@ def atualizar_top5(tempo):
         pos -= 1
  
     top_tempos[pos] = tempo
-    top_nomes[pos] = ""  # será preenchido depois
+    top_nomes[pos] = ""  # preenchido depois
     atualizado = True
     return pos
  
@@ -169,7 +171,7 @@ while not fimdoprograma:
     luzes_acendem()
     while True:
         if cronometro_de_espera(random.randint(2, 15)):
-            errado, lugar = cronometro_reacaovdd()
+            lugar = cronometro_reacao()
             time.sleep(2)
         else:
             tempo_e_dist(0, medir_distancia())
@@ -186,3 +188,6 @@ while not fimdoprograma:
                     print(f"{i+1}º: {top_nomes[i]} - {top_tempos[i]:.2f} segundos")
                 print("")
             atualizado = False
+        vermelho = False
+        amarelo = False
+        verde = False
